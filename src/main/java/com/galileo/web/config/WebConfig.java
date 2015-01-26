@@ -23,15 +23,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.jdbc.datasource.init.DatabasePopulator;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
-import com.galileo.web.account.JdbcAccountRepository;
+import java.util.Properties;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -45,25 +42,57 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = "com.galileo.web", excludeFilters = {
     @Filter(Configuration.class)})
 @EnableTransactionManagement
-public class WebConfig extends AppConfig{
+public class WebConfig extends AppConfig {
 
-    @Bean(destroyMethod = "shutdown")
-    public DataSource dataSource() {
-        EmbeddedDatabaseFactory factory = new EmbeddedDatabaseFactory();
-        factory.setDatabaseName("spring-social-showcase");
-        factory.setDatabaseType(EmbeddedDatabaseType.H2);
-        factory.setDatabasePopulator(databasePopulator());
-        return factory.getDatabase();
+    private static final String DATABASE_DRIVER = "jdbc.driverClassName";
+    private static final String DATABASE_PASSWORD = "jdbc.password";
+    private static final String DATABASE_URL = "jdbc.url";
+    private static final String DATABASE_USERNAME = "jdbc.username";
+
+    private static final String HIBERNATE_DIALECT = "hibernate.dialect";
+    private static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+    private static final String ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
+    private static final String HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+
+    @Bean
+    public DataSource dataSource(Environment env) {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        dataSource.setDriverClassName(env.getRequiredProperty(DATABASE_DRIVER));
+        dataSource.setUrl(env.getRequiredProperty(DATABASE_URL));
+        dataSource.setUsername(env.getRequiredProperty(DATABASE_USERNAME));
+        dataSource.setPassword(env.getRequiredProperty(DATABASE_PASSWORD));
+
+        return dataSource;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    public LocalSessionFactoryBean sessionFactory(Environment env) {
+        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
+        sessionFactoryBean.setDataSource(dataSource(env));
+        sessionFactoryBean.setPackagesToScan(env.getRequiredProperty(ENTITYMANAGER_PACKAGES_TO_SCAN));
+        sessionFactoryBean.setHibernateProperties(hibProperties(env));
+        return sessionFactoryBean;
+    }
+
+    private Properties hibProperties(Environment env) {
+        Properties properties = new Properties();
+        properties.put(HIBERNATE_DIALECT, env.getRequiredProperty(HIBERNATE_DIALECT));
+        properties.put(HIBERNATE_SHOW_SQL, env.getRequiredProperty(HIBERNATE_SHOW_SQL));
+        properties.put(HBM2DDL_AUTO, env.getRequiredProperty(HBM2DDL_AUTO));
+        return properties;
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public PlatformTransactionManager transactionManager(Environment env) {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory(env).getObject());
+        return transactionManager;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(Environment env) {
+        return new JdbcTemplate(dataSource(env));
     }
 
     @Bean
@@ -71,12 +100,4 @@ public class WebConfig extends AppConfig{
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-    // internal helpers
-    private DatabasePopulator databasePopulator() {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("JdbcUsersConnectionRepository.sql", JdbcUsersConnectionRepository.class));
-        populator.addScript(new ClassPathResource("Account.sql", JdbcAccountRepository.class));
-        populator.addScript(new ClassPathResource("data.sql", JdbcAccountRepository.class));
-        return populator;
-    }
 }

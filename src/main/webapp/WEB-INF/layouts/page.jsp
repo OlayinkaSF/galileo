@@ -4,7 +4,7 @@
 <%@ page session="false" %>
 <html>
     <head>
-        <title>Spring Social Showcase</title>
+        <title>Galileo</title>
         <link rel="stylesheet" href="<c:url value="/resources/page.css" />" type="text/css" media="screen" />
         <link rel="stylesheet" href="<c:url value="/resources/form.css" />" type="text/css" media="screen" />
         <link rel="stylesheet" href="<c:url value="/resources/messages/messages.css" />" type="text/css" media="screen" />

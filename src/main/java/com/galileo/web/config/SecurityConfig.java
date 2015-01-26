@@ -15,6 +15,7 @@
  */
 package com.galileo.web.config;
 
+import com.galileo.web.account.JdbcAccountRepository;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
@@ -46,13 +47,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Inject
     private DataSource dataSource;
+    
+    @Bean
+    JdbcAccountRepository jdbcAccountRepository(){
+        return new JdbcAccountRepository(null, null);
+    }
 
     @Autowired
     public void registerAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, true from Account where username = ?")
-                .authoritiesByUsernameQuery("select username, 'ROLE_USER' from Account where username = ?")
+                .usersByUsernameQuery("select username, password, 'Y' as enabled from Account where username = ?")
+                .authoritiesByUsernameQuery("select username, 'ROLE_USER' as authority from Account where username = ?")
                 .passwordEncoder(passwordEncoder());
     }
 
