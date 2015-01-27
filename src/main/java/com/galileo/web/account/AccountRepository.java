@@ -21,6 +21,4 @@ public interface AccountRepository {
 
     Account findAccountByUsername(String username);
 
-    public Account findAccountByUsername(String username, String password);
-
 }

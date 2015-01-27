@@ -30,17 +30,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class LinkedInProfileController {
 
-    @Inject
-    private ConnectionRepository connectionRepository;
-
-    @RequestMapping(value = "/linkedin", method = RequestMethod.GET)
-    public String home(Principal currentUser, Model model) {
-        Connection<LinkedIn> connection = connectionRepository.findPrimaryConnection(LinkedIn.class);
-        if (connection == null) {
-            return "redirect:/connect/linkedin";
-        }
-        model.addAttribute("profile", connection.getApi().profileOperations().getUserProfile());
-        return "linkedin/profile";
-    }
-
+	@Inject
+	private ConnectionRepository connectionRepository;
+	
+	@RequestMapping(value="/linkedin", method=RequestMethod.GET)
+	public String home(Principal currentUser, Model model) {
+		Connection<LinkedIn> connection = connectionRepository.findPrimaryConnection(LinkedIn.class);
+		if (connection == null) {
+			return "redirect:/connect/linkedin";
+		}
+		model.addAttribute("profile", connection.getApi().profileOperations().getUserProfile());
+		return "linkedin/profile";
+	}
+	
 }

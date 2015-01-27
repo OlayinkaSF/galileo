@@ -11,7 +11,7 @@
     </head>
     <body>
         <div id="header">
-            <h1><a href="<c:url value="/"/>">Spring Social Showcase</a></h1>
+            <h1><a href="<c:url value="/"/>">Galileo</a></h1>
         </div>
 
         <div id="leftNav">

@@ -48,7 +48,6 @@ public class JdbcAccountRepository implements AccountRepository {
                     "insert into Account (firstName, lastName, username, password) values (?, ?, ?, ?)",
                     user.getFirstName(), user.getLastName(), user.getUsername(),
                     passwordEncoder.encode(user.getPassword()));
-            System.out.println("user created!");
         } catch (DuplicateKeyException e) {
             throw new UsernameAlreadyInUseException(user.getUsername());
         }
@@ -64,18 +63,6 @@ public class JdbcAccountRepository implements AccountRepository {
                                 .getString("lastName"));
                     }
                 }, username);
-    }
-
-    @Override
-    public Account findAccountByUsername(String username, String password) {
-        return jdbcTemplate.queryForObject("select username, firstName, lastName, password from Account where username = ? and password = ?",
-                new RowMapper<Account>() {
-                    @Override
-                    public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        System.out.println("sign in request");
-                        return new Account(rs.getString("username"), null, rs.getString("firstName"), rs.getString("lastName"));
-                    }
-                }, username, passwordEncoder.encode(password));
     }
 
 }

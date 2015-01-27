@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:facebook="http://www.springframework.org/schema/social/facebook"
+       xmlns:twitter="http://www.springframework.org/schema/social/twitter"
+       xmlns:social="http://www.springframework.org/schema/social"
+       xmlns:linkedin="http://www.springframework.org/schema/social/linkedin"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd
+		http://www.springframework.org/schema/social/linkedin http://www.springframework.org/schema/social/spring-social-linkedin.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/social/twitter http://www.springframework.org/schema/social/spring-social-twitter.xsd
+		http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <context:property-placeholder location="classpath:/com/galileo/web/config/application.properties" />
+
+    <facebook:config app-id="${facebook.appKey}" app-secret="${facebook.appSecret}" app-namespace="socialshowcase" />
+    <twitter:config app-id="${twitter.appKey}" app-secret="${twitter.appSecret}"/>
+    <linkedin:config app-id="${linkedin.appKey}" app-secret="${linkedin.appSecret}"/>
+
+    <social:jdbc-connection-repository/>	
+    <bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+
+    <bean id="connectController" class="org.springframework.social.connect.web.ConnectController" autowire="constructor">
+        <property name="connectInterceptors">
+            <list>
+                <bean class="com.galileo.web.facebook.PostToWallAfterConnectInterceptor" />
+                <bean class="com.galileo.web.twitter.TweetAfterConnectInterceptor" />
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="psc" class="org.springframework.social.connect.web.ProviderSignInController" autowire="constructor" />		
+    <bean id="signInAdapter" class="com.galileo.web.signin.SimpleSignInAdapter" autowire="constructor" />
+	
+    <bean id="disconnectController" class="org.springframework.social.facebook.web.DisconnectController" 
+          c:_0-ref="usersConnectionRepository" c:_1="${facebook.appSecret}" />
+
+</beans>

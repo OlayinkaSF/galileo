@@ -3,7 +3,7 @@
 
 <tiles-definitions>
         
-    <definition name="page" templateExpression="/WEB-INF/layouts/page.jsp">
-    </definition>
+	<definition name="page" templateExpression="/WEB-INF/layouts/page.jsp">
+	</definition>
         
 </tiles-definitions>

@@ -4,9 +4,9 @@
 <%@ page session="false" %>
 
 <h3>Your Facebook Friends</h3>
-
+	
 <ul class="friends">
-    <c:forEach items="${friends}" var="friend">
-        <li><img src="http://graph.facebook.com/<c:out value="${friend.id}"/>/picture" align="middle"/><c:out value="${friend.name}"/></li>
-        </c:forEach>
+<c:forEach items="${friends}" var="friend">
+	<li><img src="http://graph.facebook.com/<c:out value="${friend.id}"/>/picture" align="middle"/><c:out value="${friend.name}"/></li>
+</c:forEach>
 </ul>

@@ -7,22 +7,24 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <packaging>war</packaging>
-    <artifactId>galileo-web</artifactId>
+    <artifactId>galileo-web-a</artifactId>
     <dependencies>
         <dependency>
-            <groupId>com.galileo</groupId>
-            <artifactId>galileo-web-facebook</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.2</version>
         </dependency>
         <dependency>
-            <groupId>com.galileo</groupId>
-            <artifactId>galileo-web-twitter</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>2.5.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.galileo</groupId>
-            <artifactId>galileo-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

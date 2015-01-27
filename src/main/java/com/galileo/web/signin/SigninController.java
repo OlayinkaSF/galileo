@@ -15,9 +15,6 @@
  */
 package com.galileo.web.signin;
 
-import com.galileo.web.account.Account;
-import com.galileo.web.account.AccountRepository;
-import javax.inject.Inject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,23 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class SigninController {
 
-    private final AccountRepository accountRepository;
-
-    @Inject
-    public SigninController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
-
-    @RequestMapping(value = "/signin/authenticate", method = RequestMethod.POST)
-    public void signin(String username, String password) {
-        Account account = accountRepository.findAccountByUsername(username, password);
-        if (account != null) {
-            SignInUtils.signin(username);
-        }
-    }
-
-    @RequestMapping(value = "/signin", method = RequestMethod.GET)
-    public void signin() {
-
-    }
+	@RequestMapping(value="/signin", method=RequestMethod.GET)
+	public void signin() {
+	}
 }

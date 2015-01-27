@@ -10,7 +10,7 @@ import org.springframework.social.security.SocialUserDetailsService;
 
 public class SimpleSocialUsersDetailService implements SocialUserDetailsService {
 
-	private final UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 
 	public SimpleSocialUsersDetailService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;

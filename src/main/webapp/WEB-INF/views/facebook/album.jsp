@@ -4,7 +4,7 @@
 <%@ page session="false" %>
 
 <h3>Your Facebook Photo Album: <c:out value="${album.name}"/></h3>
-
+	
 <c:forEach items="${photos}" var="photo">
-    <img src="${photo.albumImage.source}" align="middle"/>
+	<img src="${photo.albumImage.source}" align="middle"/>
 </c:forEach>
