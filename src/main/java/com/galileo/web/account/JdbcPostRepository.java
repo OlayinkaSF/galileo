@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcPostRepository implements PostRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
     private final PasswordEncoder passwordEncoder;
 
     @Inject
@@ -43,10 +42,10 @@ public class JdbcPostRepository implements PostRepository {
     @Transactional
     @Override
     public void createPost(Post post) {
-        System.out.println(""+jdbcTemplate.update(
-                "insert into Post (username, content) values (?, ?)",
-                post.getUsername(), post.getContent()
-        )+"fhgccccccc cgfchtcrtrhdrtd thrddrth cfgc gcfcfg cfxdfxfxdfxfxhfcfgcgffgchg\n ctrcr xerxgx dxdfxgf");
+        jdbcTemplate.update(
+                "insert into Post (username, owner, content, longitude, latitude, place) values (?, ?, ?, ?, ?, lower(?))",
+                post.getUsername(), post.getOwner(), post.getContent(), post.getLongitude(), post.getLatitude(), post.getPlace()
+        );
     }
 
     @Override
@@ -57,8 +56,12 @@ public class JdbcPostRepository implements PostRepository {
                     @Override
                     public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Post post = new Post();
+                        post.setUsername(rs.getString("username"));
+                        post.setOwner(rs.getString("owner"));
                         post.setContent(rs.getString("content"));
-                        post.setUsername(rs.getString("content"));
+                        post.setLongitude(rs.getDouble("longitude"));
+                        post.setLatitude(rs.getDouble("latitude"));
+                        post.setPlace(rs.getString("place"));
                         return post;
                     }
                 });

@@ -1,0 +1,123 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 30, 2015, 2:38:52 PM
+    Author     : Olayinka
+*/
+
+#OpenLayers_Control_PanZoomBar_18{
+    background: url('map/img/nav.png') no-repeat;
+    width: 56px;
+    height: 58px;
+    background-position: 1px 2px;
+}
+#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers_Map_2{
+    background: url('map/img/gmap_ui.png') no-repeat !important;
+    background-position: -20px -110px !important; 
+    left: 21px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_OpenLayers_Map_2{
+    background: url('map/img/gmap_ui.png') no-repeat !important;
+    background-position: 0px -384px !important;
+    left: 20px !important;
+    height: 10px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_OpenLayers_Map_2_innerImage{
+    display: none;
+}
+#OpenLayers_Control_PanZoomBar_18_zoomout{
+    left: 21px !important;
+    background: url('map/img/gmap_ui.png') no-repeat !important;
+    background-position: -20px -361px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_zoomout img{
+    display: none;
+}
+#OpenLayers_Control_PanZoomBar_18_zoomin{
+    left: 21px !important;
+    background: url('map/img/gmap_ui.png') no-repeat !important;
+    background-position: -20px -402px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_zoomin img{
+    display: none;
+}
+#OpenLayers_Control_PanZoomBar_18_panup,
+#OpenLayers_Control_PanZoomBar_18_pandown,
+#OpenLayers_Control_PanZoomBar_18_panleft,
+#OpenLayers_Control_PanZoomBar_18_panright{
+}
+#OpenLayers_Control_PanZoomBar_18_panup{
+    background-position: -20px -2px !important;
+    left: 21px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_panleft{
+    background-position: -3px -19px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_panright{
+    background-position: -37px -19px !important;
+    left: 38px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_pandown{
+    background-position: -20px -36px !important;
+    left: 21px !important;
+    top: 38px !important;
+}
+#OpenLayers_Control_PanZoomBar_18_panup img,
+#OpenLayers_Control_PanZoomBar_18_pandown img,
+#OpenLayers_Control_PanZoomBar_18_panleft img,
+#OpenLayers_Control_PanZoomBar_18_panright img{
+    display: none;
+}
+
+#popup_FrameDecorationDiv_0 img, #popup_FrameDecorationDiv_1 img,
+#popup_FrameDecorationDiv_2 img, #popup_FrameDecorationDiv_3 img,
+#popup_FrameDecorationDiv_4 img{
+    display: none;
+}
+
+.olPopupCloseBox {
+    background: url("map/img/gmap_ui.png") no-repeat;
+    background-position: 0px -334px;
+    cursor: pointer;
+    top: 10px !important;
+    right: 10px !important;
+}
+.olFramedCloudPopupContent {
+    padding: 10px;
+    overflow: auto;
+    font-family: Verdana, Tahoma, "DejaVu Sans", sans-serif;
+    font-size: 12px;
+    top: 5px !important;
+    right: 5px;
+    bottom: 20px;
+    left: 5px !important;
+    width: auto !important;
+    height: auto !important;
+    background: white;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.298039) !important;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    box-shadow: 0px 1px 4px -1px rgba(0, 0, 0, 0.298039);
+    line-height: 1.5em;
+}
+.olFramedCloudPopupContent .title{
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.olFramedCloudPopupContent .spacer{
+    margin-left: 40px;
+}
+#popup_FrameDecorationDiv_2{
+    /*width: 100% !important;*/
+    width: 100% !important;
+    background: url('map/img/tail.png') no-repeat center center;
+    z-index: 10;
+    height: 21px !important;
+    bottom: 0px !important;
+}

@@ -4,11 +4,9 @@
        xmlns:facebook="http://www.springframework.org/schema/social/facebook"
        xmlns:twitter="http://www.springframework.org/schema/social/twitter"
        xmlns:social="http://www.springframework.org/schema/social"
-       xmlns:linkedin="http://www.springframework.org/schema/social/linkedin"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd
-		http://www.springframework.org/schema/social/linkedin http://www.springframework.org/schema/social/spring-social-linkedin.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/social/twitter http://www.springframework.org/schema/social/spring-social-twitter.xsd
 		http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
@@ -19,7 +17,6 @@
 
     <facebook:config app-id="${facebook.appKey}" app-secret="${facebook.appSecret}" app-namespace="socialshowcase" />
     <twitter:config app-id="${twitter.appKey}" app-secret="${twitter.appSecret}"/>
-    <linkedin:config app-id="${linkedin.appKey}" app-secret="${linkedin.appSecret}"/>
 
     <social:jdbc-connection-repository/>	
     <bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" />

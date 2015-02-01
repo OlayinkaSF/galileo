@@ -39,7 +39,4 @@
 
 	<!-- FACEBOOK SIGNIN -->
     <p><a href="<c:url value="/auth/facebook"/>"><img src="<c:url value="/resources/social/facebook/sign-in-with-facebook.png"/>" border="0"/></a><br/></p>
- 
-	<!-- LINKEDIN SIGNIN -->
-    <p><a href="<c:url value="/auth/linkedin"/>">Sign In with LinkedIn</a><br/></p>
-	
+    

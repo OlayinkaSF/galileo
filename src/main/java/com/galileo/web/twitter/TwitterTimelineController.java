@@ -20,6 +20,7 @@ import com.galileo.web.account.PostRepository;
 import java.util.List;
 import javax.inject.Inject;
 import org.android.json.JSONArray;
+import org.android.json.JSONException;
 
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
@@ -80,12 +81,14 @@ public class TwitterTimelineController {
 
     @ResponseBody
     @RequestMapping(value = "/twitter/map/grab", method = RequestMethod.GET)
-    public String timeLineObject(Model model) {
+    public String timeLineObject(Model model) throws JSONException {
         TwitterProfile profile = twitter.userOperations().getUserProfile();
         model.addAttribute("profile", profile);
         List<Post> posts = postRepository.findPostByUsername(profile.getScreenName());
-        JSONArray array = new JSONArray(posts);
-        System.out.println(array.toString());
+        JSONArray array = new JSONArray();
+        for (Post post : posts) {
+            array.put(post.toJSONObject());
+        }
         return array.toString();
     }
 }

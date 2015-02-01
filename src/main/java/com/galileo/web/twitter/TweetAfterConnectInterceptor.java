@@ -15,16 +15,15 @@
  */
 package com.galileo.web.twitter;
 
+import com.galileo.web.account.PlaceRepository;
 import com.galileo.web.account.Post;
 import com.galileo.web.account.PostRepository;
-import com.galileo.web.account.UsernameAlreadyInUseException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import org.springframework.social.DuplicateStatusException;
+import org.android.json.JSONArray;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.web.ConnectInterceptor;
@@ -42,6 +41,9 @@ public class TweetAfterConnectInterceptor implements ConnectInterceptor<Twitter>
 
     @Inject
     private PostRepository postRepository;
+
+    @Inject
+    private PlaceRepository placeRepository;
 
     @Override
     public void preConnect(ConnectionFactory<Twitter> provider, MultiValueMap<String, String> parameters, WebRequest request) {
@@ -65,8 +67,30 @@ public class TweetAfterConnectInterceptor implements ConnectInterceptor<Twitter>
 
                     @Override
                     public void onTweet(Tweet tweet) {
-                        postRepository.createPost(new Post(username, tweet.getText()));
-
+                        String place = tweet.getPlace();
+                        if (place != null) {
+                            try {
+                                JSONArray array = new JSONArray(place);
+                                array = array.getJSONArray(0);
+                                array = array.getJSONArray(0);
+                                double lng = array.getDouble(0);
+                                double lat = array.getDouble(1);
+                                System.out.println(lng + lat + "");
+                                postRepository.createPost(new Post(username, tweet.getUser().getScreenName(), tweet.getText(), lng, lat, null));
+                            } catch (Exception ex) {
+                                Logger.getLogger(TweetAfterConnectInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            place = tweet.getUser().getLocation();
+                            if (place != null && !place.trim().isEmpty()) {
+                                double[] coord = placeRepository.findCoordForPlace(place.trim());
+                                if (coord != null) {
+                                    postRepository.createPost(new Post(username, tweet.getUser().getScreenName(), tweet.getText(), coord[0], coord[1], null));
+                                } else {
+                                    postRepository.createPost(new Post(username, tweet.getUser().getScreenName(), tweet.getText(), null, null, place));
+                                }
+                            }
+                        }
                     }
 
                     @Override
