@@ -1,0 +1,25 @@
+<polymer-element name="m-toolbar">
+    <template>
+        <style>
+            #core_toolbar {
+                color: rgb(255, 255, 255);
+                background-color: transparent;
+            }
+        </style>
+        <core-toolbar id="core_toolbar">
+            <!-- flex spaces this element and justifies the icons to the right-side -->
+            <div flex>Application</div>
+            <core-icon-button icon="search" on-click="{{showSearch}}"></core-icon-button>
+            <core-icon-button icon="refresh" on-click="{{showSearch}}"></core-icon-button>
+            <core-icon-button icon="add" on-click="{{showSearch}}"></core-icon-button>
+        </core-toolbar>
+    </template>
+    <script>
+        Polymer({
+            showSearch: function (event, detail, sender) {
+                console.log("search shown");
+                gloat();
+            }
+        });
+    </script>
+</polymer-element>

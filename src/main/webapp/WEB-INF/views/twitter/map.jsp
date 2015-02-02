@@ -19,6 +19,8 @@
 <script type="text/javascript">
     // Create the map using the specified DOM element
     var map = new OpenLayers.Map("myMap");
+    
+    var posts;
 
     map.addControl(new OpenLayers.Control.PanZoomBar());
 
@@ -42,7 +44,8 @@
         }
     }
 
-    function buildPopUp(post, lonloat) {
+    function buildPopUp(key, lonloat) {
+        var post = posts[key];
         return function (e) {
             removePopups();
             var popup = newPopUp(lonloat, post.content);
@@ -50,7 +53,8 @@
         };
     }
 
-    function placeMark(post) {
+    function placeMark(key) {
+        var post = posts[key];
         var icon = Math.floor(Math.random() * icons.length);
         var px = post.longitude;
         var py = post.latitude;
@@ -81,12 +85,13 @@
             this.setOpacity(0.6);
         });
 
-        marker.events.register("click", marker, buildPopUp(post, marker.lonlat));
+        marker.events.register("click", marker, buildPopUp(key, marker.lonlat));
 
         markers.addMarker(marker);
     }
 
-    function callGoogle(post) {
+    function callGoogle(key) {
+        var post = posts[key];
         $.ajax({
             url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + post.place + '&key=${googleMapKey}',
             success: function (position) {
@@ -96,7 +101,7 @@
                 var lonlat = position.results[0].geometry.location;
                 post.longitude = lonlat.lng;
                 post.latitude = lonlat.lat;
-                placeMark(post);
+                placeMark(key);
                 $.ajax({
                     url: '/galileo/place/update',
                     type: "POST",
@@ -112,14 +117,14 @@
         url: '/galileo/twitter/map/grab',
         success: function (data) {
 
-            var posts = $.parseJSON(data);
+            posts = $.parseJSON(data);
 
             for (var key in posts) {
                 var post = posts[key];
                 if (post.longitude == 0 && post.latitude == 0) {
                     continue;
                 }
-                placeMark(post);
+                placeMark(key);
             }
 
             for (var key in posts) {
@@ -134,7 +139,7 @@
                     continue;
                 }
 
-                callGoogle(post);
+                callGoogle(key);
             }
         }
     });

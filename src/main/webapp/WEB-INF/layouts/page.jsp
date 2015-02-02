@@ -21,6 +21,7 @@
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-icon-button/core-icon-button.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-toolbar/core-toolbar.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-menu/core-submenu.html">
+        <link rel="import" href="<c:url value="/resources/element/m-toolbar.html"/>">
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <style>    
             html,body {
@@ -49,19 +50,27 @@
                 font-size: 16px;
             }
             #content {
-                position: absolute;
-                top: 0px;
-                left: 0px;
                 width: 100%;
                 height: 100%;
+                display: block;
+                left: 0px;
+                top: 0px;
+                position: absolute;
             }
         </style>
+        <script>
+            function gloat(){
+                console.log("gloating");
+            }
+        </script>
     </head>
     <body unresolved>
 
     <core-scaffold id="core_scaffold">
         <tiles:insertTemplate template="menu.jsp" />
-        <div id="div" tool>Galileo</div>
+        <!-- flex makes the bar span across the top of the main content area -->
+        <m-toolbar id="core_toolbar1" tool flex>
+        </m-toolbar>
         <div id="content">
             <tiles:insertAttribute name="content" />
         </div>
