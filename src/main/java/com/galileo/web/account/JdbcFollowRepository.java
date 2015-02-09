@@ -28,42 +28,32 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcPostRepository implements PostRepository {
+public class JdbcFollowRepository implements FollowRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public JdbcPostRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
+    public JdbcFollowRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     @Override
-    public void createPost(Post post) {
+    public void createFollow(String follower, String followed) {
         jdbcTemplate.update(
-                "insert into Post (username, owner, content, longitude, latitude, place) values (?, ?, ?, ?, ?, lower(?))",
-                post.getUsername(), post.getOwner(), post.getContent(), post.getLongitude(), post.getLatitude(), post.getPlace()
+                "insert into follow values (?, ?)",
+                follower, followed
         );
     }
 
     @Override
-    public List<Post> findPostByUsername(String postname) {
-        return jdbcTemplate.query("select * from Post where username = ? ",
+    public List<String> findFollowersByUsername(String postname) {
+        return jdbcTemplate.query("select follower from follow where followed = ?",
                 new String[]{postname},
-                new RowMapper<Post>() {
+                new RowMapper<String>() {
                     @Override
-                    public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Post post = new Post();
-                        post.setUsername(rs.getString("username"));
-                        post.setOwner(rs.getString("owner"));
-                        post.setContent(rs.getString("content"));
-                        post.setLongitude(rs.getDouble("longitude"));
-                        post.setLatitude(rs.getDouble("latitude"));
-                        post.setPlace(rs.getString("place"));
-                        post.setTimeOfPost(rs.getDate("timeofpost"));
-                        return post;
+                    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return rs.getString("follower");
                     }
                 });
     }

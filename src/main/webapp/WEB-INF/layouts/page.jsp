@@ -10,7 +10,6 @@
               content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes" />
         <script src="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/webcomponentsjs/webcomponents.js">
         </script>
-        <link rel="stylesheet" href="<c:url value="/resources/page.css" />" type="text/css" media="screen" />
         <link rel="stylesheet" href="<c:url value="/resources/messages/messages.css" />" type="text/css" media="screen" />
         <link rel="stylesheet" href="<c:url value="/resources/map.css" />" type="text/css" media="screen" />
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/font-roboto/roboto.html" />
@@ -21,8 +20,12 @@
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-icon-button/core-icon-button.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-toolbar/core-toolbar.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-menu/core-submenu.html">
+        <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/paper-dialog/paper-dialog.html">
+        <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/paper-button/paper-button.html">
+        <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/polymer/polymer.html">
         <link rel="import" href="<c:url value="/resources/element/m-toolbar.html"/>">
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <style>    
             html,body {
                 height: 100%;
@@ -53,27 +56,62 @@
                 width: 100%;
                 height: 100%;
                 display: block;
+                left: 25%;
+                padding:10px;
+                top: 0px;
+                position: absolute;
+            }
+            #dialog{
+                width: 350px;
+                padding: 10px;
+            }
+            #core_header_panel1 {
+                width: 25%;
+                height: 100%;
                 left: 0px;
                 top: 0px;
                 position: absolute;
             }
         </style>
         <script>
-            function gloat(){
+            function gloat() {
                 console.log("gloating");
             }
         </script>
     </head>
     <body unresolved>
 
-    <core-scaffold id="core_scaffold">
+    <core-scaffold id="core_scaffold" responsivewidth="1366px">
         <tiles:insertTemplate template="menu.jsp" />
         <!-- flex makes the bar span across the top of the main content area -->
         <m-toolbar id="core_toolbar1" tool flex>
         </m-toolbar>
         <div id="content">
+            <core-header-panel mode="standard" id="core_header_panel1">
+                <section id="section"></section>
+            </core-header-panel>
             <tiles:insertAttribute name="content" />
         </div>
+        <paper-dialog id="dialog" heading="Search for some magic!"
+                      transition="paper-dialog-transition-bottom">
+            <form id="form" action="<c:url value="/search" />" method="GET" onsubmit>
+                <div id="div1" class="input">
+                    <paper-input-decorator label="Search" layout vertical>
+                        <input id="search" placeholder="Search" name="term" is="core-input" type="text" />
+                    </paper-input-decorator>
+                </div>
+                <input type="submit" hidden="true" />
+            </form>
+
+            <paper-button dismissive>Cancel</paper-button>
+            <paper-button affirmative default>OK</paper-button>
+        </paper-dialog>
     </core-scaffold>
+
+    <script>
+        function toggleDialog() {
+            document.getElementById("dialog").toggle();
+        }
+    </script>
 </body>
 </html>

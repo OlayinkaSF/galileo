@@ -1,9 +1,9 @@
-function newPopUp(lonlat, content) {
+function newPopUp(lonlat, post) {
     popup = new OpenLayers.Popup.FramedCloud(
             'popup',
             lonlat,
             null,
-            '<br /><b>' + content + '</b><br />',
+            '<br /><b>' + post.content + '</b> <br />' + '<a onclick=inflate(this) class="mean" key="' + post.cluster + '" href="#"> MORE</a>',
             new OpenLayers.Icon(
                     '',
                     new OpenLayers.Size(0, 0),
@@ -12,6 +12,10 @@ function newPopUp(lonlat, content) {
             true,
             null
             );
+    return inflatePopUp(popup);
+}
+
+function inflatePopUp(popup) {
     popup.minSize = new OpenLayers.Size(200, 40);
     popup.maxSize = new OpenLayers.Size(350, 300);
     popup.autoSize = true;
@@ -64,4 +68,37 @@ function closestTo(number, set) {
         }
     }
     return closest;
+}
+
+function inflate(dom) {
+    var key = dom.attributes["key"].value;
+    console.log(key);
+    var cluster = clusterContents[key];
+    var list = document.createElement("ul");
+    for (var i = 0; i < cluster.length; i++) {
+        var post = posts[cluster[i]];
+        var anchor = document.createElement("p");
+        anchor.innerText = post.content;
+        var elem = document.createElement("li");
+        elem.appendChild(anchor);
+        list.appendChild(elem);
+    }
+    removePopups();
+    var lonlat = new OpenLayers.LonLat(means[key].longitude, means[key].latitude);
+    lonlat.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
+    var popup = new OpenLayers.Popup.FramedCloud(
+            'popup',
+            lonlat,
+            null,
+            list.innerHTML,
+            new OpenLayers.Icon(
+                    '',
+                    new OpenLayers.Size(0, 0),
+                    new OpenLayers.Pixel(0, 0)
+                    ),
+            true,
+            null
+            );
+    popup = inflatePopUp(popup);
+    map.addPopup(popup);
 }

@@ -36,4 +36,6 @@
     <bean id="disconnectController" class="org.springframework.social.facebook.web.DisconnectController" 
           c:_0-ref="usersConnectionRepository" c:_1="${facebook.appSecret}" />
 
+
+    
 </beans>

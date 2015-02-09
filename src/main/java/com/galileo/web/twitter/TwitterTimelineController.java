@@ -15,12 +15,15 @@
  */
 package com.galileo.web.twitter;
 
+import com.galileo.web.account.AccountRepository;
 import com.galileo.web.account.Post;
 import com.galileo.web.account.PostRepository;
+import java.security.Principal;
 import java.util.List;
 import javax.inject.Inject;
 import org.android.json.JSONArray;
 import org.android.json.JSONException;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
@@ -36,6 +39,8 @@ public class TwitterTimelineController {
 
     private final Twitter twitter;
     private final PostRepository postRepository;
+    private final ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+    private final AccountRepository accountRepository;
 
     @RequestMapping(value = "/twitter/timeline", method = RequestMethod.GET)
     public String showTimeline(Model model) {
@@ -43,9 +48,10 @@ public class TwitterTimelineController {
     }
 
     @Inject
-    public TwitterTimelineController(Twitter twitter, PostRepository postRepository) {
+    public TwitterTimelineController(Twitter twitter, PostRepository postRepository, AccountRepository accountRepository) {
         this.twitter = twitter;
         this.postRepository = postRepository;
+        this.accountRepository = accountRepository;
     }
 
     @RequestMapping(value = "/twitter/timeline/{timelineType}", method = RequestMethod.GET)
@@ -75,7 +81,8 @@ public class TwitterTimelineController {
     }
 
     @RequestMapping(value = "/twitter/map", method = RequestMethod.GET)
-    public String timeLineMap(Model model) {
+    public String timeLineMap(Model model, Principal currentUser) {
+        model.addAttribute(accountRepository.findAccountByUsername(currentUser.getName()));
         return "twitter/map";
     }
 

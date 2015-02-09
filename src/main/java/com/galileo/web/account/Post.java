@@ -5,6 +5,7 @@
  */
 package com.galileo.web.account;
 
+import java.sql.Date;
 import org.android.json.JSONException;
 import org.android.json.JSONObject;
 
@@ -20,6 +21,7 @@ public class Post {
     Double longitude;
     Double latitude;
     String place;
+    Date timeOfPost;
 
     public String getPlace() {
         return place;
@@ -42,6 +44,15 @@ public class Post {
         this.place = place;
     }
 
+    public Date getTimeOfPost() {
+        return timeOfPost;
+    }
+
+    public void setTimeOfPost(Date timeOfPost) {
+        this.timeOfPost = timeOfPost;
+    }
+
+    
    
 
     Post() {

@@ -10,16 +10,15 @@
 
     <bean 
         id="dataSource"
-        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        
-        <property name="driverClassName" value="oracle.jdbc.OracleDriver" />
-        <property name="url" value="jdbc:oracle:thin:@localhost:1521:XE" />
-        <property name="username" value="galileo" />
-        <property name="password" value="galileo" />
+        class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
+        <property name="URL" value="${jdbc.url}" /> 
+        <property name="user" value="${jdbc.username}"/> 
+        <property name="password" value="${jdbc.password}"/> 
+        <property name="connectionCachingEnabled" value="true"/> 
     </bean>
         
     <bean id="sessionFactory"
-              class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="packagesToScan" value="com.galileo.web" />
         <property name="hibernateProperties">
@@ -37,7 +36,7 @@
     </bean>
 		
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
-              c:_-ref="dataSource" />
+          c:_-ref="dataSource" />
 
     <tx:annotation-driven />
 	
