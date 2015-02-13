@@ -50,7 +50,7 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findPostByUsername(String postname) {
-        return jdbcTemplate.query("select * from Post where username = ? ",
+        return jdbcTemplate.query("select * from (select * from Post where username = ?) where rownum <= 1000",
                 new String[]{postname},
                 new RowMapper<Post>() {
                     @Override

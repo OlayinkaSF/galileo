@@ -1,0 +1,55 @@
+<link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/polymer/polymer.html">
+<link rel="import" href="../service/post-service.html">
+<link rel="import" href="post-card.html">
+
+<polymer-element name="post-list" attributes="show posts means">
+    <template>
+        <style>
+            :host {
+                display: block;
+                width: 100%;
+            }
+            post-card {
+                margin-bottom: 1px;
+                margin-top: 1px;
+            }
+        </style>
+
+        <post-service id="service" posts="{{posts}}"  means="{{means}}">
+        </post-service>
+        <div layout vertical center>
+
+            <template repeat="{{post in postsRev}}">
+                <post-card post="{{post}}">
+                </post-card>
+            </template>
+
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            created: function () {
+                this.posts = [];
+                this.postsRev = [];
+            },
+            ready: function () {
+                var that = this;
+                var sayHello = this.$.service;
+                sayHello.addEventListener('said-means', function (e) {
+                    that.fire('means-said', e.detail);
+                });
+            },
+            postsChanged: function (oldVal, newVal) {
+                if(newVal != undefined){
+                    this.postsRev = newVal.reverse();
+                }
+                if (oldVal[0] != undefined && 'index' in oldVal[0]) {
+                    this.postsRev.unshift(this.posts[oldVal[0].index]);
+                }
+            }
+        });
+    </script>
+
+</polymer-element>

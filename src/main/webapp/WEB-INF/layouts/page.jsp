@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ page session="false" %>
+<s:message code="google.map.key" var="googleMapKey" />
 <html>
     <head>
-
+        <script>var googleMapKey = "${googleMapKey}"; </script> 
+        <script type="text/javascript" src="<c:url value="/resources/jquery/2.1.3/jquery.js" />"></script>
         <title>Polymer, The Rock!</title>
         <meta name="viewport"
               content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes" />
@@ -12,6 +15,7 @@
         </script>
         <link rel="stylesheet" href="<c:url value="/resources/messages/messages.css" />" type="text/css" media="screen" />
         <link rel="stylesheet" href="<c:url value="/resources/map.css" />" type="text/css" media="screen" />
+       
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/font-roboto/roboto.html" />
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-scaffold/core-scaffold.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-header-panel/core-header-panel.html">
@@ -25,7 +29,6 @@
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/polymer/polymer.html">
         <link rel="import" href="<c:url value="/resources/element/m-toolbar.html"/>">
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <style>    
             html,body {
                 height: 100%;
@@ -56,21 +59,13 @@
                 width: 100%;
                 height: 100%;
                 display: block;
-                left: 25%;
-                padding:10px;
+                left: 0px;
                 top: 0px;
                 position: absolute;
             }
             #dialog{
                 width: 350px;
                 padding: 10px;
-            }
-            #core_header_panel1 {
-                width: 25%;
-                height: 100%;
-                left: 0px;
-                top: 0px;
-                position: absolute;
             }
         </style>
         <script>
@@ -87,9 +82,6 @@
         <m-toolbar id="core_toolbar1" tool flex>
         </m-toolbar>
         <div id="content">
-            <core-header-panel mode="standard" id="core_header_panel1">
-                <section id="section"></section>
-            </core-header-panel>
             <tiles:insertAttribute name="content" />
         </div>
         <paper-dialog id="dialog" heading="Search for some magic!"

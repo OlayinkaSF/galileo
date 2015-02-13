@@ -1,0 +1,198 @@
+<link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-icon-button/core-icon-button.html">
+<link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-toolbar/core-toolbar.html">
+<link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-header-panel/core-header-panel.html">
+<link rel="import" href="post-list.html">
+
+
+<polymer-element name="my-map">
+
+    <template>
+        <link rel="stylesheet" href="../map/ol.css" type="text/css">
+        <link rel="stylesheet" href="../map/ol3-popup.css" type="text/css">
+        <style>    
+            :host {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+            }
+            #core_header_panel {
+                width: 25%;
+                height: 100%;
+                left: 0px;
+                top: 0px;
+                position: absolute;
+            }
+            #section {
+                height: 1000px;
+                background: linear-gradient(rgb(214, 227, 231), rgb(173, 216, 230));
+            }
+            #map {
+                width: 75%;
+                height: 100%;
+                left: 25%;
+                top: 0px;
+                position: absolute;
+            }
+            #popup {
+                padding-bottom: 45px;
+            }
+
+        </style>
+        <core-header-panel mode="standard" id="core_header_panel">
+            <section id="section">
+                <post-list posts="{{posts}}" means="{{means}}" show="all" id="postList"></post-list>
+            </section>
+        </core-header-panel>
+        <div id="map">
+        </div>
+    </template>
+
+    <script src="../map/ol-debug.js" type="text/javascript">
+    </script>
+    <script src="../map/ol3-popup.js" type="text/javascript">
+    </script>
+    <script type="text/javascript" src="../sockjs-0.3.4.js">
+    </script>
+    <script type="text/javascript" src="../stomp.js">
+    </script>
+    <script >
+        var vectorSource = new ol.source.Vector({});
+        //create the style
+        var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                anchor: [15, 15],
+                anchorXUnits: 'pixels',
+                anchorYUnits: 'pixels',
+                src: '/galileo/resources/map/img/marker-gold.png'
+            }))
+        });
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: iconStyle
+        });
+        var mLayer = new ol.layer.Tile({source: new ol.source.OSM()});
+        var mView = new ol.View({
+            center: ol.proj.transform([37.41, 8.82], 'EPSG:4326', 'EPSG:3857')
+        });
+        var popup = new ol.Overlay.Popup();
+        var map = null;
+
+        function handleMapClick(e) {
+            var lonlat = e.coordinate;
+            var iconFeature = new ol.Feature({
+                geometry: new ol.geom.Point(lonlat),
+                name: 'Null Island ',
+                population: 4000,
+                rainfall: 500
+            });
+            vectorSource.clear();
+            vectorSource.addFeature(iconFeature);
+            lonlat = ol.proj.transform(lonlat, 'EPSG:3857', 'EPSG:4326');
+            console.log(lonlat);
+        }
+
+        Polymer('my-map', {
+            ready: function () {
+                popup.polymer = this;
+                map = new ol.Map({
+                    target: this.$.map,
+                    controls: ol.control.defaults({
+                        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                            collapsible: true
+                        })
+                    }).extend([
+                        new ol.control.ZoomToExtent({
+                            extent: [0, 0, 0, 0]
+                        })
+                    ]),
+                    layers: [mLayer, vectorLayer],
+                    overlays: [popup],
+                    view: mView
+                });
+                mView.setZoom(3);
+
+                var that = this;
+                var sayHello = this.$.postList;
+                sayHello.addEventListener('means-said', function (e) {
+                    if (e.detail.update == -1) {
+                        that.draw();
+                    }
+                    else {
+                        that.mark(e.detail.update);
+                    }
+                });
+            },
+            draw: function () {
+                this.mapClicked();
+                for (var i = 0; i < this.means.length; i = i + 1) {
+                    this.mark(i);
+                }
+            },
+            mark: function (i) {
+                var mean = this.means[i];
+                if (mean.cluster.length == 0) {
+                    return;
+                }
+                var lonlat = ol.proj.transform([mean.longitude, mean.latitude], 'EPSG:4326', 'EPSG:3857');
+                var iconFeature = new ol.Feature({
+                    geometry: new ol.geom.Point(lonlat),
+                    key: i
+                });
+                vectorSource.addFeature(iconFeature);
+            },
+            mapClicked: function () {
+                var that = this;
+                // display popup on click
+                map.on('click', function (evt) {
+                    // Hide existing popup and reset it's offset
+                    popup.hide();
+                    popup.setOffset([0, 0]);
+
+                    var feature = map.forEachFeatureAtPixel(evt.pixel,
+                            function (feature, layer) {
+                                return feature;
+                            });
+                    if (feature) {
+                        var coord = feature.getGeometry().getCoordinates();
+                        console.log(feature);
+                        var info = document.createElement("div");
+                        var anchor = document.createElement("a");
+                        anchor.innerHTML = "<b>MORE</b>";
+                        anchor.setAttribute("key", feature.values_.key);
+                        anchor.setAttribute("href", "#");
+                        anchor.className = "mean";
+                        anchor.onclick = function () {
+                            inflate(this);
+                        };
+                        info.appendChild(newPopUp(feature.values_.key, 0));
+                        info.appendChild(anchor);
+                        popup.setOffset([0, 0]);
+                        popup.show(coord, info);
+                    }
+                });
+            }
+        });
+        window.addEventListener('polymer-ready', function (e) {
+            map.updateSize();
+        });
+        function inflate(dom) {
+            var that = popup.polymer;
+            var key = dom.attributes["key"].value;
+            var div = document.createElement("div");
+            var cluster = that.means[key].cluster;
+            for (var i = 0; i < cluster.length; i++) {
+                div.appendChild(newPopUp(key, i));
+            }
+            popup.show(popup.values_.position, div);
+        }
+        function newPopUp(key, index) {
+            var that = popup.polymer;
+            var mean = that.means[key];
+            var list = document.createElement("post-card");
+            list.post = that.posts[mean.cluster[index]];
+            return list;
+        }
+    </script>
+
+</polymer-element>
