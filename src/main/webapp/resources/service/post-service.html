@@ -21,7 +21,7 @@
         </style>
         <core-ajax id="ajax"
                    auto
-                   url="/galileo/twitter/map/grab"
+                   url="{{getUrl}}"
                    on-core-response="{{postsLoaded}}"
                    handleAs="json">
         </core-ajax>
@@ -52,6 +52,7 @@
         Polymer('post-service', {
             created: function () {
                 this.posts = [];
+                this.getUrl = app.getUrl;
             },
             postsLoaded: function () {
                 // Make a copy of the loaded data
@@ -73,10 +74,11 @@
                 }
 
                 this.cluster();
+                console.log("done clustering");
             },
             callGoogle: function (post) {
                 $.ajax({
-                    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + post.place + '&key=${googleMapKey}',
+                    url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + post.place + '&key=' + googleMapKey,
                     success: function (position) {
                         if (position.status !== "OK") {
                             return;
@@ -85,6 +87,13 @@
                         post.longitude = lonlat.lng;
                         post.latitude = lonlat.lat;
                         post.update = 1;
+                        $.ajax({
+                            url: '/galileo/place/update',
+                            type: "POST",
+                            data: {
+                                post: JSON.stringify(post)
+                            }
+                        });
                     }
                 });
             },
@@ -194,15 +203,10 @@
                     }
                 }
 
-                //if (this.means[mkey].cluster.length == 0)
-                //   placeMark(mkey);
-
                 post.cluster = mkey;
-                if (this.means[mkey].cluster.length == 0) {
-                    this.fire('said-means', {update: mkey});
-                }
                 this.means[mkey].cluster.push(this.posts.length);
                 this.posts.push(post);
+                this.fire('said-means', {update: mkey});
             }
 
         });

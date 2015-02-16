@@ -4,7 +4,7 @@
 <link rel="import" href="post-list.html">
 
 
-<polymer-element name="my-map">
+<polymer-element name="my-map" >
 
     <template>
         <link rel="stylesheet" href="../map/ol.css" type="text/css">
@@ -119,7 +119,17 @@
                         that.draw();
                     }
                     else {
-                        that.mark(e.detail.update);
+                        var i = e.detail.update;
+                        var mean = this.means[i];
+                        if (mean.cluster.length == 1) {
+                            that.mark(e.detail.update);
+                        }
+                        if (mean.cluster.length == 0) {
+                            return;
+                        }
+                        var lonlat = ol.proj.transform([mean.longitude, mean.latitude], 'EPSG:4326', 'EPSG:3857');
+                        if (displayPopUp)
+                            popup.show(lonlat, newPopUp(i, mean.cluster.length - 1));
                     }
                 });
             },

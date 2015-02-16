@@ -6,7 +6,10 @@
 <s:message code="google.map.key" var="googleMapKey" />
 <html>
     <head>
-        <script>var googleMapKey = "${googleMapKey}"; </script> 
+        <script>
+            var googleMapKey = "${googleMapKey}";
+            var displayPopUp = true;
+        </script> 
         <script type="text/javascript" src="<c:url value="/resources/jquery/2.1.3/jquery.js" />"></script>
         <title>Polymer, The Rock!</title>
         <meta name="viewport"
@@ -15,7 +18,7 @@
         </script>
         <link rel="stylesheet" href="<c:url value="/resources/messages/messages.css" />" type="text/css" media="screen" />
         <link rel="stylesheet" href="<c:url value="/resources/map.css" />" type="text/css" media="screen" />
-       
+
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/font-roboto/roboto.html" />
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-scaffold/core-scaffold.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/core-header-panel/core-header-panel.html">
@@ -27,6 +30,8 @@
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/paper-dialog/paper-dialog.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/paper-button/paper-button.html">
         <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/polymer/polymer.html">
+        <link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/paper-input/paper-input-decorator.html">
+
         <link rel="import" href="<c:url value="/resources/element/m-toolbar.html"/>">
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <style>    
@@ -63,10 +68,12 @@
                 top: 0px;
                 position: absolute;
             }
-            #dialog{
-                width: 350px;
+            html /deep/ paper-dialog {
+                min-width: 350px;
+                width: 640px;
                 padding: 10px;
             }
+
         </style>
         <script>
             function gloat() {
@@ -86,7 +93,7 @@
         </div>
         <paper-dialog id="dialog" heading="Search for some magic!"
                       transition="paper-dialog-transition-bottom">
-            <form id="form" action="<c:url value="/search" />" method="GET" onsubmit>
+            <form id="form" action="<c:url value="/search/map" />" method="GET" onsubmit>
                 <div id="div1" class="input">
                     <paper-input-decorator label="Search" layout vertical>
                         <input id="search" placeholder="Search" name="term" is="core-input" type="text" />
@@ -104,6 +111,7 @@
         function toggleDialog() {
             document.getElementById("dialog").toggle();
         }
+        toggleDialog();
     </script>
 </body>
 </html>

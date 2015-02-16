@@ -45,4 +45,9 @@ public class GreetingController {
         return message;
     }
 
+    @SubscribeMapping("/search/{term}")
+    public HelloMessage broadCastSearch(Principal currentUser, @DestinationVariable String term) {
+        return null;
+    }
+
 }

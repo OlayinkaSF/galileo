@@ -50,22 +50,31 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findPostByUsername(String postname) {
-        return jdbcTemplate.query("select * from (select * from Post where username = ?) where rownum <= 1000",
+        return jdbcTemplate.query("select * from (select * from Post where username = ? ORDER BY timeofpost DESC) where rownum <= 1000",
                 new String[]{postname},
-                new RowMapper<Post>() {
-                    @Override
-                    public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Post post = new Post();
-                        post.setUsername(rs.getString("username"));
-                        post.setOwner(rs.getString("owner"));
-                        post.setContent(rs.getString("content"));
-                        post.setLongitude(rs.getDouble("longitude"));
-                        post.setLatitude(rs.getDouble("latitude"));
-                        post.setPlace(rs.getString("place"));
-                        post.setTimeOfPost(rs.getDate("timeofpost"));
-                        return post;
-                    }
-                });
+                rowMapper);
+    }
+
+    static final RowMapper rowMapper = new RowMapper<Post>() {
+        @Override
+        public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Post post = new Post();
+            post.setUsername(rs.getString("username"));
+            post.setOwner(rs.getString("owner"));
+            post.setContent(rs.getString("content"));
+            post.setLongitude(rs.getDouble("longitude"));
+            post.setLatitude(rs.getDouble("latitude"));
+            post.setPlace(rs.getString("place"));
+            post.setTimeOfPost(rs.getDate("timeofpost"));
+            return post;
+        }
+    };
+
+    @Override
+    public List<Post> search(String term) {
+        return jdbcTemplate.query("select * from (select * from Post where content like '%'||?||'%' ORDER BY timeofpost DESC) where rownum <= 1000",
+                new String[]{term},
+                rowMapper);
     }
 
 }

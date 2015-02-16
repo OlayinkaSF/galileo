@@ -42,8 +42,10 @@
                 });
             },
             postsChanged: function (oldVal, newVal) {
-                if(newVal != undefined){
-                    this.postsRev = newVal.reverse();
+                if (newVal != undefined) {
+                    for (var i = 0; i < this.posts.length; i = i + 1) {
+                        this.postsRev[i] = this.posts[this.posts.length - i - 1];
+                    }
                 }
                 if (oldVal[0] != undefined && 'index' in oldVal[0]) {
                     this.postsRev.unshift(this.posts[oldVal[0].index]);

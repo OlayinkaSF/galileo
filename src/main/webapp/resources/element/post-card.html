@@ -21,8 +21,10 @@
                 font-size: medium;
                 font-weight: 600;
             }
-            .card-header #time {
-                margin-right: 5px;
+            .card-footer #coord {
+                margin-left:  5px;
+                font-size: small;
+                font-weight: 400;
             }
             .card-main #img {
                 width:  50px;
@@ -43,9 +45,12 @@
                 <div class="card-header" layout horizontal center>
                     <div id="username">{{post.owner}}</div>
                     <div id="time">03.00pm CET</div>
-                    <core-icon icon="communication:location-on" style="width: 20px; height: 20px;"></core-icon>
                 </div>
                 <p>{{post.content}}</p>
+                <div class="card-footer" layout horizontal center>
+                    <core-icon icon="communication:location-on" style="width: 20px; height: 20px;"></core-icon>
+                    <div id="coord">{{post.longitude}}, {{post.latitude}}</div>
+                </div>
             </div>
         </div>
     </template>

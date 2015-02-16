@@ -23,4 +23,6 @@ public interface PostRepository {
 
     List<Post> findPostByUsername(String username);
 
+    public List<Post> search(String term);
+
 }

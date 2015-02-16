@@ -1,3 +1,5 @@
+<link rel="import" href="https://cdn.rawgit.com/OlayinkaSF/olayinkasf.github.io/master/polymer/components/paper-toggle-button/paper-toggle-button.html">
+
 <polymer-element name="m-toolbar">
     <template>
         <style>
@@ -5,6 +7,7 @@
                 color: rgb(255, 255, 255);
                 background-color: transparent;
             }
+
         </style>
         <core-toolbar id="core_toolbar">
             <!-- flex spaces this element and justifies the icons to the right-side -->
@@ -12,6 +15,7 @@
             <core-icon-button icon="search" on-click="{{toggleDialog}}"></core-icon-button>
             <core-icon-button icon="refresh" on-click="{{showSearch}}"></core-icon-button>
             <core-icon-button icon="add" on-click="{{showSearch}}"></core-icon-button>
+            <paper-toggle-button id="paperToggleButton" checked ="true" on-change="{{checkedToggle}}"></paper-toggle-button>
         </core-toolbar>
     </template>
     <script>
@@ -22,6 +26,9 @@
             },
             toggleDialog: function () {
                 toggleDialog();
+            },
+            checkedToggle: function () {
+                displayPopUp = this.$.paperToggleButton.checked;
             }
         });
     </script>

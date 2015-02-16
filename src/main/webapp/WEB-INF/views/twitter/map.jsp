@@ -7,10 +7,10 @@
 <script>
     var app = {
         helloUrl: '<c:url value="/hello" />',
-        subscribeUrl: "/app/post/${account.username}"
+        subscribeUrl: "${updateUrl}",
+        getUrl: '<c:url value="${getUrl}"/>'
     };
 </script>
 <link rel="import" href="<c:url value="/resources/element/my-map.html"/>">
-
 
 <my-map></my-map>
